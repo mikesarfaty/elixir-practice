@@ -17,10 +17,25 @@ defmodule PracticeWeb.PageController do
   end
 
   def factor(conn, %{"x" => x}) do
+    {x, _} = Integer.parse(x)
     y = Practice.factor(x)
+        |> Enum.map(&Integer.to_string/1)
+        |> Enum.join(", ")
+
     render conn, "factor.html", x: x, y: y
   end
 
-  # TODO: Add an action for palindrome.
-  # TODO: Add a template for palindrome over in lib/*_web/templates/page/??.html.eex
+  def palindrome(conn, %{"x" => x}) do
+    ans = Practice.palindrome?(x)
+          |> (fn(a) ->
+            cond do
+              a ->
+                "is a palindrome"
+              true ->
+                "is not a palindrome"
+            end
+          end).()
+    render conn, "palindrome.html", x: x, y: ans
+  end
+
 end
